@@ -8,30 +8,30 @@ end
 
 def checkIncrease(arr1)
   arr = arr1.dup
-  cock = false
+  used = false
   arr.each_with_index do |element, index|
     if (arr[index+1].to_i - arr[index].to_i < 4 ) && (arr[index+1].to_i - arr[index].to_i > 0) || arr[index+1] == nil 
       next
     else
-      if cock == true 
+      if used == true 
         return false
         break 
       end
-      if index == arr.length-2 && cock != true
+      if index == arr.length-2 && used != true
         if arr[index].to_i - arr[index-1].to_i < 4 && arr[index].to_i - arr[index-1].to_i > 0
           return true
         end
       end
 
-      if index == 0 && cock != true
+      if index == 0 && used != true
         if arr[index+2].to_i - arr[index+1].to_i < 4 && arr[index+2].to_i - arr[index+1].to_i > 0 && arr[index+2] != nil
           arr.delete_at(index)
-          cock = true
+          used = true
           next
         end
       end
-      if (arr[index+2].to_i - arr[index].to_i < 4 ) && (arr[index+2].to_i - arr[index].to_i > 0) && arr[index+2] != nil && cock != true
-        cock = true
+      if (arr[index+2].to_i - arr[index].to_i < 4 ) && (arr[index+2].to_i - arr[index].to_i > 0) && arr[index+2] != nil && used != true
+        used = true
         arr.delete_at(index+1)
       else
         return false
@@ -43,30 +43,30 @@ end
 
 def checkDecrease(arr1)
   arr = arr1.dup
-  cock = false
+  used = false
   arr.each_with_index do |element, index|
     if (arr[index+1].to_i - arr[index].to_i > -4) && (arr[index+1].to_i - arr[index].to_i < 0) || arr[index+1] == nil
       next
     else 
-      if cock == true 
+      if used == true 
         return false
         break 
       end
-      if index == arr.length-2 && cock != true
+      if index == arr.length-2 && used != true
         if arr[index].to_i - arr[index-1].to_i > -4 && arr[index].to_i - arr[index-1].to_i < 0
           return true
         end
       end
 
-      if index == 0 && cock != true
+      if index == 0 && used != true
         if arr[index+2].to_i - arr[index+1].to_i > -4 && arr[index+2].to_i - arr[index+1].to_i < 0 && arr[index+2] != nil
           arr.delete_at(index)
-          cock = true
+          used = true
           next
         end
       end
-      if (arr[index+2].to_i - arr[index].to_i > -4 ) && (arr[index+2].to_i - arr[index].to_i < 0) && arr[index+2] != nil && cock != true
-        cock = true
+      if (arr[index+2].to_i - arr[index].to_i > -4 ) && (arr[index+2].to_i - arr[index].to_i < 0) && arr[index+2] != nil && used != true
+        used = true
         arr.delete_at(index+1)
       else
         return false
@@ -80,7 +80,6 @@ sum = 0
 
 input.each do |element|
   if checkIncrease(element) || checkDecrease(element)
-    p element
     sum += 1
   end
 end
