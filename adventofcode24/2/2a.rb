@@ -8,11 +8,8 @@ end
 
 def checkIncrease(arr)
   arr.each_with_index do |element, index|
-    p "checked:"
-    p element
-    p index
+
     if (arr[index+1].to_i - arr[index].to_i < 4 ) && (arr[index+1].to_i - arr[index].to_i > 0) || arr[index+1] == nil
-      p "looks Right"
       next
     else
       return false
