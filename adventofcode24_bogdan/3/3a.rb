@@ -35,9 +35,12 @@ while i != input.length
   elsif str.length > 3  
     if str == "do()"
       doing = true
+    elsif input[i+3] == nil
+      break
     elsif str + input[i+1]+input[i+2]+input[i+3] == "don't()"
       doing = false
     end
+
     i -= 3
     str = ""
   end
