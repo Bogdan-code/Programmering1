@@ -7,8 +7,8 @@ GRID_WIDTH = Window.width/32
 
 $score = 0
 $shopOpen = false
-
-set fps_cap:20
+$upgrades = [[1],[1]]
+set fps_cap:12
 
 
 class Enemy
@@ -72,32 +72,52 @@ class Game
 
   end
   def draw
-    Text.new("Score #{$score}", color:'green', x:10, y:10, size:25)
+    Text.new("Score #{$score}", color:'green', x:10, y:10,z:10, size:25)
   end
   def record_hit
-    $score += 1
+    $score += 1 + $upgrades[0][0]-1
   end
 end
 
 
 class Shop
   def initialize
+    @x = 200
+    @y = 64
     $upgrades = [[1, 5,"UPGRADE 1", "ONE MORE ENEMY"],[1, 20,"UPGRADE 2", "BIGGER SCREEN"]]
     @checkPress = []
-    p $upgrades
+
   end
   def openShop
     $shopOpen = !$shopOpen
   end
   def draw
+    Text.new("Score #{$score}", color:'green', x:10, y:10,z:10, size:25)
     $upgrades.each_with_index do |info, upgrade|
-      @upgrade = Text.new(info[2] + ":" + info[0].to_s , color: 'red', x:50, y: 64*upgrade)
+      @upgrade = Text.new(info[2] + ":" + info[0].to_s + " cost:#{(info[1]+1).to_i}" , color: 'red', x:@x, y: (@y*upgrade)+64)
+      @desc = Text.new(info[3], color:'red', x:@x, y:(@y*upgrade)+92, size:10)
     end
   end
 
+  def checkClick(x, y)
+    $upgrades.each_with_index do |info, upgrade|
+      if (@x..@x+128).to_a.include?(x) && (@y*upgrade+64..(@y*upgrade)+100).to_a.include?(y) && $shopOpen
+        p upgrade
+        if $score >= info[1]
+          info[0] += 1
+          $score -= info[1]
+          $score = $score.to_i
+          info[1] *= 1.5
+        end
+      end
+    end
+  end
+  
+  def purchase
+  end
 end
 
-$enemys = Array.new(10){Enemy.new}
+$enemys = Array.new($upgrades[1][0]){Enemy.new}
 player = Player.new
 game = Game.new
 shop = Shop.new
@@ -116,6 +136,8 @@ update do
     end
     player.draw
   elsif $shopOpen
+    $enemys = Array.new($upgrades[1][0]){Enemy.new}
+    clear
     set background: 'black'
     shop.draw
   else
@@ -133,6 +155,21 @@ end
 on :key_down do |event|
   if event.key == 'b'
     shop.openShop
+  end
+end
+
+on :mouse_down do |event|
+  # x and y coordinates of the mouse button event
+  # Read the button event
+  case event.button
+  when :left
+    # Left mouse button pressed down
+    if shop.checkClick(Window.mouse_x, Window.mouse_y)
+    end
+  when :middle
+    # Middle mouse button pressed down
+  when :right
+    # Right mouse button pressed down
   end
 end
 show
