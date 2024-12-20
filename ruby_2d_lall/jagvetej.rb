@@ -7,7 +7,7 @@ GRID_WIDTH = Window.width/32
 
 $score = 0
 $shopOpen = false
-$upgrades = [[1],[1]]
+$upgrades = [[1],[1],[1]]
 set fps_cap:12
 
 
@@ -62,8 +62,6 @@ class Player
     @position[1]
   end
 
-
-
 end
 
 
@@ -71,9 +69,11 @@ class Game
   def initialize
 
   end
+
   def draw
     Text.new("Score #{$score}", color:'green', x:10, y:10,z:10, size:25)
   end
+
   def record_hit
     $score += 1 + $upgrades[0][0]-1
   end
@@ -84,13 +84,15 @@ class Shop
   def initialize
     @x = 200
     @y = 64
-    $upgrades = [[1, 5,"UPGRADE 1", "ONE MORE ENEMY"],[1, 20,"UPGRADE 2", "BIGGER SCREEN"]]
+    $upgrades = [[1, 5,"UPGRADE 1", "ONE MORE ENEMY"],[1, 20,"UPGRADE 2", "MORE FOOD"],[1, 100,"UPGRADE 3", "NAS"]]
     @checkPress = []
 
   end
+
   def openShop
     $shopOpen = !$shopOpen
   end
+
   def draw
     Text.new("Score #{$score}", color:'green', x:10, y:10,z:10, size:25)
     $upgrades.each_with_index do |info, upgrade|
@@ -107,7 +109,7 @@ class Shop
           info[0] += 1
           $score -= info[1]
           $score = $score.to_i
-          info[1] *= 1.5
+          info[1] *= 1.2
         end
       end
     end
@@ -159,17 +161,14 @@ on :key_down do |event|
 end
 
 on :mouse_down do |event|
-  # x and y coordinates of the mouse button event
-  # Read the button event
+  p Window.width
+  p Window.height
   case event.button
   when :left
     # Left mouse button pressed down
-    if shop.checkClick(Window.mouse_x, Window.mouse_y)
-    end
+    shop.checkClick(Window.mouse_x, Window.mouse_y)
   when :middle
-    # Middle mouse button pressed down
   when :right
-    # Right mouse button pressed down
   end
 end
 show
