@@ -5,9 +5,10 @@ set title: "TEST SPEL!", background: 'white', width: GRID_SIZE*32, height: GRID_
 GRID_HEIGHT = Window.height/32
 GRID_WIDTH = Window.width/32
 
-$score = 0
+$score = 10000
+$rebirths = 0
 $shopOpen = false
-$upgrades = [[1],[1],[1]]
+$upgrades = [[1],[1],[1],[1]]
 set fps_cap:12
 
 
@@ -62,7 +63,14 @@ class Player
     @position[1]
   end
 
+  def rebirth
+    $upgrades = [[1, 5,"UPGRADE 1", "ONE MORE ENEMY"],[1, 20,"UPGRADE 2", "MORE FOOD"],[1, 100,"UPGRADE 3", "NAS"], [$rebirths, 1000*1.2**$rebirths, "REBIRTH", "rebirth resets your stats but 2x to everything"]]
+    $score = 0
+  end
+
 end
+
+
 
 
 class Game
@@ -75,7 +83,7 @@ class Game
   end
 
   def record_hit
-    $score += 1 + $upgrades[0][0]-1
+    $score += (1 + $upgrades[0][0]-1) * $rebirths+1
   end
 end
 
@@ -84,7 +92,7 @@ class Shop
   def initialize
     @x = 200
     @y = 64
-    $upgrades = [[1, 5,"UPGRADE 1", "ONE MORE ENEMY"],[1, 20,"UPGRADE 2", "MORE FOOD"],[1, 100,"UPGRADE 3", "NAS"]]
+    $upgrades = [[1, 5,"UPGRADE 1", "ONE MORE ENEMY"],[1, 20,"UPGRADE 2", "MORE FOOD"],[1, 100,"UPGRADE 3", "NAS"], [0, 1000*1.2**$rebirths, "REBIRTH", "rebirth resets your stats but 2x to everything"]]
     @checkPress = []
 
   end
@@ -104,9 +112,14 @@ class Shop
   def checkClick(x, y)
     $upgrades.each_with_index do |info, upgrade|
       if (@x..@x+128).to_a.include?(x) && (@y*upgrade+64..(@y*upgrade)+100).to_a.include?(y) && $shopOpen
-        p upgrade
-        if $score >= info[1]
-          info[0] += 1
+        if upgrade == 3 && $score >= info[1]
+          $rebirths+=1
+          $score -= info[1]
+          $score = $score.to_i
+          info[1] *= 1.2
+          return upgrade
+        elsif $score >= info[1] && upgrade != 3
+          info[0] += 1*($rebirths+1)
           $score -= info[1]
           $score = $score.to_i
           info[1] *= 1.2
@@ -149,7 +162,7 @@ update do
   
 end
 on :key_held do |event|
-  if['up', 'down', 'left', 'right', 'w','s','a','d'].include?(event.key)
+  if['up', 'down', 'left', 'right', 'w','s','a','d'].include?(event.key) && !$shopOpen
     player.move(event.key)
   end
 end
@@ -166,7 +179,9 @@ on :mouse_down do |event|
   case event.button
   when :left
     # Left mouse button pressed down
-    shop.checkClick(Window.mouse_x, Window.mouse_y)
+    if shop.checkClick(Window.mouse_x, Window.mouse_y) == 3
+      player.rebirth
+    end
   when :middle
   when :right
   end
