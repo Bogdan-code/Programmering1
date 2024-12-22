@@ -114,7 +114,7 @@ class Hole
   end
 
   def changeLocation
-    @position = [rand(Window.width/8).to_i, rand(Window.height/8).to_i]
+    @position = [rand((Window.width/8)-10).to_i, rand((Window.height/8)-10).to_i]
     self.draw
   end
 end
