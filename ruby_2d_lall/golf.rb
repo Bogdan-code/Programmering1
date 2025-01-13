@@ -1,6 +1,6 @@
 require 'ruby2d'
 GRID_SIZE = 8
-set title: "GOLF TYPE SHI", background: 'green', width: GRID_SIZE*128, height: GRID_SIZE*80
+set title: "GOLF", background: 'green', width: GRID_SIZE*128, height: GRID_SIZE*80
 set fps_cap:12
 
 $buttonPressed = false
