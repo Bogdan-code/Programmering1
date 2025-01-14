@@ -2,7 +2,7 @@ require 'ruby2d'
 GRID_SIZE = 8
 
 set title: "GOLF 2P", background: 'white', width: GRID_SIZE*128, height: GRID_SIZE*80, z:-100
-set fps_cap:60
+set fps_cap:30
 
 $buttonPressed = false
 win_screen = false
@@ -73,7 +73,7 @@ class Player
 
     dist = Math.sqrt(dx*dx + dy*dy)
 
-    @velocity = dist / 50
+    @velocity = dist / 25
 
 
   end 
@@ -225,7 +225,6 @@ update do
       end
     end
     if $secondp
-      
       game.draw
       Text.new("PLAYER 2 TURN", x:400, y:0, color:'red', size: 20)
       players[1].draw
@@ -295,6 +294,5 @@ on :mouse_move do |event|
     players[1].updateAngle(event.x, event.y) if $secondp
   end
 end
-
 
 show
