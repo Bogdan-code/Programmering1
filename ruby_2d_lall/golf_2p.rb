@@ -73,7 +73,7 @@ class Player
 
     dist = Math.sqrt(dx*dx + dy*dy)
 
-    @velocity = dist / 25
+    @velocity = dist / 35
 
 
   end 
