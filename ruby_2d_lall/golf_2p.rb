@@ -2,7 +2,7 @@ require 'ruby2d'
 GRID_SIZE = 8
 
 set title: "GOLF 2P", background: 'white', width: GRID_SIZE*128, height: GRID_SIZE*80, z:-100
-set fps_cap:30
+set fps_cap:60
 
 $buttonPressed = false
 win_screen = false
