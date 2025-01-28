@@ -2,7 +2,7 @@ require 'ruby2d'
 GRID_SIZE = 8
 
 set title: "GOLF 2P", background: 'white', width: GRID_SIZE*128, height: GRID_SIZE*80, z:-100
-set fps_cap:60
+set fps_cap:120
 
 $buttonPressed = false
 win_screen = false
@@ -73,7 +73,7 @@ class Player
 
     dist = Math.sqrt(dx*dx + dy*dy)
 
-    @velocity = dist / 35
+    @velocity = dist / 25
 
 
   end 
@@ -195,7 +195,6 @@ class Game
 end
 
 
-
 hole = Hole.new
 game = Game.new
 players = Array.new(2){Player.new}
@@ -209,6 +208,7 @@ update do
   
   if !win_screen && !$end_menu
     hole.draw
+
     if $firstp 
       game.draw
       Text.new("PLAYER 1 TURN", x:400, y:0, color:'red', size: 20)
@@ -239,7 +239,6 @@ update do
         players[1].reset
       end
     end
-
   end
   if $scores_p1.length == $scores_p2.length && $scores_p2.length == $round
     $round += 1
