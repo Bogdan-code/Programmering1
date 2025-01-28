@@ -2,7 +2,7 @@ require 'ruby2d'
 GRID_SIZE = 8
 
 set title: "GOLF 2P", background: 'white', width: GRID_SIZE*128, height: GRID_SIZE*80, z:-100
-set fps_cap:60
+set fps_cap:120
 
 $buttonPressed = false
 win_screen = false
@@ -20,7 +20,7 @@ class Player
   def initialize
     @velocity= 0
     @angle = 0
-    @position = [60,40]  
+    @position = [60,40]
     @player_img = ''
   end
 
@@ -38,7 +38,7 @@ class Player
 
   def move
     
-    if @velocity.abs < 0.01
+    if @velocity.abs < 0.2
       @velocity = 0
     end
 
@@ -50,8 +50,8 @@ class Player
 
     @position[0] += x_comp * @velocity
     @position[1] -= y_comp * @velocity
-    @velocity -= @velocity ** 0.000000005
-    @velocity = @velocity.real.to_i
+    @velocity -= @velocity ** 0.05
+    @velocity = @velocity.to_i
 
 
   end
@@ -73,7 +73,7 @@ class Player
 
     dist = Math.sqrt(dx*dx + dy*dy)
 
-    @velocity = dist / 50
+    @velocity = dist / 25
 
 
   end 
@@ -105,30 +105,6 @@ class Player
       self.draw
     end
   end
-
-  def collison_with_wall(input)
-    p @angle
-    x, y, width, height = input[0], input[1], input[2] / GRID_SIZE, input[3] / GRID_SIZE
-    ball_x = @position[0]
-    ball_y = @position[1]
-    
-    # Check if ball intersects the wall
-    if (ball_x >= x && ball_x <= x + width) &&
-       (ball_y >= y && ball_y <= y + height)
-  
-      # Determine which side of the wall is hit
-      if ball_y <= y || ball_y >= y + height
-        # Vertical reflection (top/bottom sides of wall)
-        @angle = 360 - @angle
-      elsif ball_x <= x || ball_x >= x + width
-        # Horizontal reflection (left/right sides of wall)
-        @angle = 180 - @angle
-      end
-  
-      # Reduce speed to simulate energy loss
-      @velocity *= 0.9
-    end
-  end
 end
 
 
@@ -138,7 +114,7 @@ class Hole
   end
 
   def draw
-    @hole = Square.new(x:(@position[0] * GRID_SIZE), y:(@position[1]*GRID_SIZE), size: GRID_SIZE*5, color: 'black')
+    @hole = Square.new(x:(@position[0] * GRID_SIZE), y:(@position[1]*GRID_SIZE), size: GRID_SIZE*5, color: 'yellow')
   end
 
   def collison(x, y)
@@ -160,8 +136,8 @@ class Game
   end
   def draw
     if !$end_menu
-      Text.new("Hits: #{@hits}",x:20, y:20, color:"black", size:25)
-      Text.new("Round: #{$round}",x:500, y:20, color:"black", size:25)
+      Text.new("Hits: #{@hits}",x:20, y:20, color:"red", size:25)
+      Text.new("Round: #{$round}",x:500, y:20, color:"red", size:25)
     end
     if @wintext && !$end_menu
       Text.new(@wintext, x:250,y:200, color:'yellow', size:50)
@@ -180,8 +156,6 @@ class Game
       Text.new("Player 1 WON!", x:410, y:380, color:'black', size:30) if $scores_p1.sum < $scores_p2.sum
       Text.new("Player 2 WON!", x:410, y:380, color:'black', size:30) if $scores_p2.sum < $scores_p1.sum
       Text.new("Tie", x:485, y:380, color:'black', size:30) if $scores_p1.sum == $scores_p2.sum
-
-
     end
   end
   def registerHit
@@ -220,39 +194,9 @@ class Game
   end
 end
 
-class Wall
-  def initialize
-    @position = [0,0]
-    @width = 0
-    @height = 0
-    @color = 'black'
-  end
 
-  def draw
-    @wall = Rectangle.new(x:@position[0]* GRID_SIZE, y:@position[1] * GRID_SIZE, height:@height, width:@width, color: @color)
-  end
-
-  def set(xy, w, h, c)
-    @position = xy
-    @width = w*GRID_SIZE
-    @height = h*GRID_SIZE
-    @color = c
-  end
-
-  def get
-    return [@position[0], @position[1], @width, @height]
-  end
-end
-
-
-
-game = Game.new
 hole = Hole.new
-wall1 = Wall.new
-wall1.set([50,30],10,5,'red')
-walls = []
-walls << wall1
-
+game = Game.new
 players = Array.new(2){Player.new}
 
 players[0].set_img(1)
@@ -260,20 +204,16 @@ players[1].set_img(2)
 
 update do
   clear
-  background = Image.new('golfback.png', width: 1024, height: 640, z: -5)
-  wall1.draw
+  background = Image.new('Space_Background.png', width: 1024, height: 640, z: -5)
   
   if !win_screen && !$end_menu
     hole.draw
+
     if $firstp 
       game.draw
       Text.new("PLAYER 1 TURN", x:400, y:0, color:'red', size: 20)
       players[0].draw
       players[0].move
-      walls.each do |wall|
-        players[0].collison_with_wall(wall.get)
-      end
-
       if players[0].x< 0 || players[0].x > 127 || players[0].y < 0 || players[0].y > 77
         players[0].reset
         game.registerHit
@@ -285,14 +225,10 @@ update do
       end
     end
     if $secondp
-      
       game.draw
       Text.new("PLAYER 2 TURN", x:400, y:0, color:'red', size: 20)
       players[1].draw
       players[1].move
-      walls.each do |wall|
-        players[1].collison_with_wall(wall.get)
-      end
       if players[1].x< 0 || players[1].x > 127 || players[1].y < 0 || players[1].y > 77
         players[1].reset
         game.registerHit
@@ -303,13 +239,12 @@ update do
         players[1].reset
       end
     end
-
   end
   if $scores_p1.length == $scores_p2.length && $scores_p2.length == $round
     $round += 1
     hole.changeLocation
   end
-  if $round > 2
+  if $round > 3
     $end_menu = true
     clear
   end
@@ -358,6 +293,5 @@ on :mouse_move do |event|
     players[1].updateAngle(event.x, event.y) if $secondp
   end
 end
-
 
 show
