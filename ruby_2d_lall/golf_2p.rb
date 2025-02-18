@@ -14,6 +14,8 @@ $firstp = true
 $secondp = false
 $round = 1
 
+rounds = 2
+
 
 class Player
 
@@ -244,7 +246,7 @@ update do
     $round += 1
     hole.changeLocation
   end
-  if $round > 3
+  if $round > rounds
     $end_menu = true
     clear
   end
