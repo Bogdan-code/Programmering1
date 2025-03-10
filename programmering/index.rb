@@ -114,7 +114,7 @@ end
 def load_cash()
   bank_append = File.open("bank/#{@logged_user}.txt", 'a')
   bank_details = File.readlines("bank/#{@logged_user}.txt")
-  bank_append.puts "0" if bank_details[0] == nil
+  bank_append.puts "80" if bank_details[0] == nil
   bank_append.close
   bank_details = File.readlines("bank/#{@logged_user}.txt")
   @cash = bank_details[0].chomp.to_i
@@ -175,8 +175,16 @@ def dice()
     puts "\e[H\e[2J"
     dice()
   end
-  p "rolling dice!"
   random_num = Random.rand(1..6)
+  p "rolling dice!"
+  sleep(0.5)
+  p ""
+  p "rolling dice!"
+  sleep(0.5)
+  p ""
+  p "IT LANDS ON #{random_num}"
+
+
   if player_num == random_num
     p "You WON! #{bet_amount*5}$"
     @cash += bet_amount*5
@@ -193,7 +201,7 @@ end
 
 ####################
 
-def work(user)
+def work()
   return ""
 end
 
