@@ -126,6 +126,16 @@ def update_cash()
   bank_write.close
 end
 
+def add_cash(amount)
+  @cash += amount
+  update_cash()
+end
+
+def remove_cash(amount)
+  @cash -= amount
+  update_cash()
+end
+
 ############
 
 #Casino Funktioner
@@ -176,34 +186,141 @@ def dice()
     dice()
   end
   random_num = Random.rand(1..6)
+  sleep(1)
+  print "\n"
   p "rolling dice!"
-  sleep(0.5)
-  p ""
+  sleep(1)
+  print "\n"
   p "rolling dice!"
-  sleep(0.5)
-  p ""
+  sleep(1)
+  print "\n"  
   p "IT LANDS ON #{random_num}"
 
 
   if player_num == random_num
     p "You WON! #{bet_amount*5}$"
-    @cash += bet_amount*5
+    add_cash(bet_amount*5)
   else 
     p "You lost: #{bet_amount}$"
-    @cash -= bet_amount
+    remove_cash(bet_amount)
+  end
+  p "press enter to continue"
+  if gets == "\n"
+    puts "\e[H\e[2J"
+    dice()
+  end
+end
+
+def coinflip()
+  p "Welcome to coinflip"
+  p "You currently have: #{@cash}$"
+  p "how much would you like to bet? (press enter to quit)"
+  bet_amount = gets.chomp.to_i
+
+
+
+  if bet_amount > @cash || bet_amount < 0
+    puts "\e[H\e[2J"
+    p "Not sufficient balance or not valid number"
+    coinflip()
+    return ""
+  elsif bet_amount == 0
+    return ""
+  end
+
+  p "choose heads or tails"
+  player_in = gets.chomp
+  if !["heads", "h", "tails", "t"].include?(player_in)
+    puts "\e[H\e[2J"
+    p "invalid  input"
+    coinflip()
+  end
+
+  if ["heads", "h"].include?(player_in)
+    player_in = 1
+  elsif ["tails", "t"].include?(player_in)
+    player_in = 2
+  end
+
+  random_num = Random.rand(1..2)
+  print "\n"
+  sleep(1)
+  p "Flipping Coin!"
+  print "\n"
+  sleep(1)
+  p "Flipping Coin"
+  print "\n"
+  sleep(1)
+  p "Flipping Coin!"
+  print "\n"  
+  sleep(1)
+  print "IT LANDS ON: "
+  print "HEADS" if random_num == 1
+  print "TAILS" if random_num == 2
+  print("\n")
+
+  if player_in == random_num
+    p "You WON! #{bet_amount}$"
+    add_cash(bet_amount)
+  else 
+    p "You lost: #{bet_amount}$"
+    remove_cash(bet_amount)
   end
   update_cash()
   p "press enter to continue"
-  casino() if gets == "\n"
-  
-
+  if gets == "\n"
+    puts "\e[H\e[2J"
+    coinflip()
+  end
 end
 
 ####################
 
+# WORK
+
+texts = ["it must've been love", "but its over now", "hallo? HALLO? HALLLOOO?", "Hej, jag heter Bogdan", "Vilket underbart spel detta är", "Ja må han leva, ja må han leva"]
+
 def work()
-  return ""
+  texts = ["it must've been love", "but its over now", "hallo? HALLO? HALLLOOO?", "Hej, jag heter #{@logged_user}", "Vilket underbart spel detta är", "Ja må han leva, ja må han leva", "#{@logged_user} is reallt beautifull", "Ska vi ut och strutsa?"]
+  p "Welcome to the job (press enter to quit)"
+  p "You are a writer. You earn 25dollar per text"
+  p "write the text:"
+  current_text = texts[Random.rand(0..texts.length)]
+  print ("#{current_text}\n")
+  user_text = gets.chomp
+  if user_text == ""
+    return ""
+  end
+  p "CHECKING INPUT!"
+  sleep(0.5)
+  print("\n")
+  print(".")
+  sleep(0.5)
+  print(".")
+  sleep(0.5)
+  print(".\n\n")
+  sleep(0.5)
+  if current_text == user_text
+    p "YOU WROTE CORRECTLY: you earned 25$" 
+    add_cash(25)
+    p "press enter to work again"
+    if gets == "\n"
+      puts "\e[H\e[2J"
+      work()
+    end
+  else
+    p"You wrote wrong!"
+    p "press enter to try again"
+    if gets == "\n"
+      puts "\e[H\e[2J"
+      work()
+    end
+
+  end
+
 end
+
+#########
 
 
 loop do
@@ -212,7 +329,7 @@ loop do
     puts "\e[H\e[2J"
     load_cash()
     p "You are now logged in as #{@logged_user}"
-    p "What would you like to access? Todo | Bank | Casino | Quit"
+    p "What would you like to access? Work | Bank | Casino | Quit"
     choice = gets.chomp.downcase
     if choice == "quit"
       @logged_in = false
@@ -224,10 +341,11 @@ loop do
     elsif choice == "casino"
       puts "\e[H\e[2J"
       casino()
+    elsif choice == "work"
+      puts "\e[H\e[2J"
+      work()
     end
 
   end
   menu()
-
-
 end
