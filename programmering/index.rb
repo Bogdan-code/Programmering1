@@ -1,5 +1,14 @@
-logins = File.open("logins.txt", 'a')
+logins = File.open("logins.txt", 'a') #Skapar en "logins.txt" fil 
 logins.close
+
+logins = File.readlines('logins.txt')
+
+logins << "hallå"
+
+cock = File.open("logins.txt", "w")
+logins.each_with_index do |event,index|
+  cock.puts(logins(index))
+end
 
 
 def load_logins()
@@ -161,31 +170,37 @@ def casino()
 
 end
 
+
+#Dice Funktion
 def dice()
+  #Välkomst Text
   p "Welcome to dice!"
   p "You currently have: #{@cash}$"
   p "how much would you like to bet? (press enter to quit)"
-  bet_amount = gets.chomp.to_i
+  bet_amount = gets.chomp.to_i #Hur mycket spelaren vill betta
 
-
-
-  if bet_amount > @cash || bet_amount < 0
+  if bet_amount > @cash || bet_amount < 0 #Kolla om man har tillräckligt med pengar och kolla om det är ett giltigt nummer
     p "Not sufficient balance or not valid number"
     puts "\e[H\e[2J"
-    dice()
+    dice() #Om inte så startar man om dice
     return ""
-  elsif bet_amount == 0
+  elsif bet_amount == 0 #Om man inte inputar något, så blir man tillbaka skickad till start skärmen
     return ""
   end
 
   p "choose number between 1-6"
-  player_num = gets.chomp.to_i
-  if ![1,2,3,4,5,6].include?(player_num)
+
+  player_num = gets.chomp.to_i #Får in spelarens nummer
+
+  if ![1,2,3,4,5,6].include?(player_num) #Kollar så att spelarens nummer är giltigt
     p "invalid  number!"
     puts "\e[H\e[2J"
-    dice()
+    dice() #Startar om spelet om det inte är det
   end
-  random_num = Random.rand(1..6)
+
+  random_num = Random.rand(1..6) #Genererar en random siffra
+
+  #Visulla delen av spelet
   sleep(1)
   print "\n"
   p "rolling dice!"
@@ -196,11 +211,12 @@ def dice()
   print "\n"  
   p "IT LANDS ON #{random_num}"
 
+  #Kollar om spelaren viunnit/förlorat.
 
-  if player_num == random_num
+  if player_num == random_num #Om vunnit, får spelaren 5gånger pengarna han lade in
     p "You WON! #{bet_amount*5}$"
     add_cash(bet_amount*5)
-  else 
+  else #Om förlorat
     p "You lost: #{bet_amount}$"
     remove_cash(bet_amount)
   end
