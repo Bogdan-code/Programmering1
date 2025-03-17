@@ -281,11 +281,11 @@ end
 texts = ["it must've been love", "but its over now", "hallo? HALLO? HALLLOOO?", "Hej, jag heter Bogdan", "Vilket underbart spel detta är", "Ja må han leva, ja må han leva"]
 
 def work()
-  texts = ["it must've been love", "but its over now", "hallo? HALLO? HALLLOOO?", "Hej, jag heter #{@logged_user}", "Vilket underbart spel detta är", "Ja må han leva, ja må han leva", "#{@logged_user} is reallt beautifull", "Ska vi ut och strutsa?"]
+  texts = ["it must've been love", "but its over now", "hallo? HALLO? HALLLOOO?", "Hej, jag heter #{@logged_user}", "Vilket underbart spel detta är", "Ja må han leva, ja må han leva", "#{@logged_user} is really beautiful", "Ska vi ut och strutsa?"]
   p "Welcome to the job (press enter to quit)"
   p "You are a writer. You earn 25dollar per text"
   p "write the text:"
-  current_text = texts[Random.rand(0..texts.length)]
+  current_text = texts[Random.rand(0..texts.length-1)]
   print ("#{current_text}\n")
   user_text = gets.chomp
   if user_text == ""
