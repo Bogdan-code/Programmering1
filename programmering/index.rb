@@ -1,14 +1,6 @@
 logins = File.open("logins.txt", 'a') #Skapar en "logins.txt" fil 
 logins.close
 
-logins = File.readlines('logins.txt')
-
-logins << "hallå"
-
-cock = File.open("logins.txt", "w")
-logins.each_with_index do |event,index|
-  cock.puts(logins(index))
-end
 
 
 def load_logins()
