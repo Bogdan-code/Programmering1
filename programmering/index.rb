@@ -1,3 +1,6 @@
+require "httparty" 
+require "nokogiri"
+
 logins = File.open("logins.txt", 'a')
 logins.close
 
