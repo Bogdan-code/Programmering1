@@ -103,6 +103,7 @@ end
 def bank(user)
   load_cash()
   puts "\e[H\e[2J"
+  ascii("bank")
   p "Welcome #{user} to your Bank"
   p "You currently have: #{@cash} $"
   p "Press enter to go back!"
@@ -141,9 +142,36 @@ end
 
 #Casino Funktioner
 
+def ascii(str)
+  if str == "casino"
+    puts "  /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$ /$$   /$$  /$$$$$$ "
+    puts " /$$__  $$ /$$__  $$ /$$__  $$|_  $$_/| $$$ | $$ /$$__  $$"
+    puts "| $$  \\__/| $$  \\ $$| $$  \\__/  | $$  | $$$$| $$| $$  \\ $$"
+    puts "| $$      | $$$$$$$$|  $$$$$$   | $$  | $$ $$ $$| $$  | $$"
+    puts "| $$      | $$__  $$ \\____  $$  | $$  | $$  $$$$| $$  | $$"
+    puts "| $$    $$| $$  | $$ /$$  \\ $$  | $$  | $$\\  $$$| $$  | $$"
+    puts "|  $$$$$$/| $$  | $$|  $$$$$$/ /$$$$$$| $$ \\  $$|  $$$$$$/"
+    puts " \\______/ |__/  |__/ \\______/ |______/|__/  \\__/ \\______/ "
+  elsif str == "bank"
+    puts ".----------------.  .----------------.  .-----------------. .----------------. "
+    puts "| .--------------. || .--------------. || .--------------. || .--------------. |"
+    puts "| |   ______     | || |      __      | || | ____  _____  | || |  ___  ____   | |"
+    puts "| |  |_   _ \\    | || |     /  \\     | || ||_   \\|_   _| | || | |_  ||_  _|  | |"
+    puts "| |    | |_) |   | || |    / /\\ \\    | || |  |   \\ | |   | || |   | |_/ /    | |"
+    puts "| |    |  __'.   | || |   / ____ \\   | || |  | |\\ \\| |   | || |   |  __'.    | |"
+    puts "| |   _| |__) |  | || | _/ /    \\ \\_ | || | _| |_\\   |_  | || |  _| |  \\ \\_| |"
+    puts "| |  |_______/   | || ||____|  |____|| || ||_____|\____|  | || | |____||____| | |"
+    puts "| |              | || |              | || |              | || |              | |"
+    puts "| '--------------' || '--------------' || '--------------' || '--------------' |"
+    puts " '----------------'  '----------------'  '----------------'  '----------------' "
+  end
+end
+
+
 def casino()
   puts "\e[H\e[2J"
   choice = ""
+  ascii("casino")
   p "Welcome #{@logged_user} to the CASINO!!"
   p "Which gamemode would you like to play?"
   p "Coinflip, Dice, Roulette or press enter to quit"
@@ -176,7 +204,8 @@ def dice()
     puts "\e[H\e[2J"
     dice() #Om inte så startar man om dice
     return ""
-  elsif bet_amount == 0 #Om man inte inputar något, så blir man tillbaka skickad till start skärmen
+  elsif bet_amount == 0 #Om man inte inputar något, så blir man tillbaka skickad till casino skärmen
+    casino()
     return ""
   end
 
@@ -203,7 +232,7 @@ def dice()
   print "\n"  
   p "IT LANDS ON #{random_num}"
 
-  #Kollar om spelaren viunnit/förlorat.
+  #Kollar om spelaren vunnit/förlorat.
 
   if player_num == random_num #Om vunnit, får spelaren 5gånger pengarna han lade in
     p "You WON! #{bet_amount*5}$"
@@ -225,15 +254,15 @@ def coinflip()
   p "how much would you like to bet? (press enter to quit)"
   bet_amount = gets.chomp.to_i
 
-
-
-  if bet_amount > @cash || bet_amount < 0
+  if bet_amount == 0
+    casino()
+    return ""
+  elsif bet_amount > @cash || bet_amount < 0
     puts "\e[H\e[2J"
     p "Not sufficient balance or not valid number"
     coinflip()
     return ""
-  elsif bet_amount == 0
-    return ""
+
   end
 
   p "choose heads or tails"
