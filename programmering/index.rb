@@ -1,8 +1,8 @@
 require "httparty" 
 require "nokogiri"
 
-logins = File.open("logins.txt", 'a')
-=======
+
+
 logins = File.open("logins.txt", 'a') #Skapar en "logins.txt" fil 
 
 logins.close
